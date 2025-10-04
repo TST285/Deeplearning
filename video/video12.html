@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Streaming Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: white;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00d4ff;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .movie-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.3);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #333, #555);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .movie-poster::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            opacity: 0.7;
+        }
+
+        .poster-text {
+            position: relative;
+            z-index: 2;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .quality-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #00d4ff;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 3;
+        }
+
+        .movie-info {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .movie-title {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .movie-year {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .video-player {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .player-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 1000px;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+        }
+
+        .player-header {
+            background: linear-gradient(90deg, #00d4ff, #0099cc);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        video {
+            width: 100%;
+            height: 500px;
+            background: #000;
+        }
+
+        .controls {
+            background: #1a1a1a;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: #00d4ff;
+            border: none;
+            color: #000;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #0099cc;
+            transform: scale(1.05);
+        }
+
+        .url-input {
+            background: #333;
+            border: 1px solid #555;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .load-btn {
+            background: #4ecdc4;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .load-btn:hover {
+            background: #45b7d1;
+            transform: scale(1.05);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            padding: 10px 20px;
+            background: rgba(255, 107, 107, 0.1);
+            margin: 10px 20px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            
+            .player-container {
+                width: 95%;
+            }
+            
+            video {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 Movie Streaming Hub</h1>
+            <p>Your Personal Cinema Collection</p>
+        </div>
+
+        <div class="movie-grid">
+            <div class="movie-card" onclick="openPlayer('Relay', '2024')">
+                <div class="movie-poster">
+                    <div class="poster-text">RELAY</div>
+                    <div class="quality-badge">WEB-DL</div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">Relay</div>
+                    <div class="movie-year">(2024)</div>
+                </div>
+            </div>
+
+            <div class="movie-card" onclick="openPlayer('Americana', '2023')">
+                <div class="movie-poster">
+                    <div class="poster-text">AMERICANA</div>
+                    <div class="quality-badge">WEB-DL</div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">Americana</div>
+                    <div class="movie-year">(2023)</div>
+                </div>
+            </div>
+
+            <div class="movie-card" onclick="openPlayer('The Fantastic 4: First Steps', '2025')">
+                <div class="movie-poster">
+                    <div class="poster-text">FANTASTIC 4</div>
+                    <div class="quality-badge">WEB-DL</div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">The Fantastic 4: First Steps</div>
+                    <div class="movie-year">(2025)</div>
+                </div>
+            </div>
+
+            <div class="movie-card" onclick="openPlayer('Lost in the Jungle', '2025')">
+                <div class="movie-poster">
+                    <div class="poster-text">LOST JUNGLE</div>
+                    <div class="quality-badge">NF WEB-DL</div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">Lost in the Jungle</div>
+                    <div class="movie-year">(2025)</div>
+                </div>
+            </div>
+
+            <div class="movie-card" onclick="openPlayer('Oh Hi!', '2025')">
+                <div class="movie-poster">
+                    <div class="poster-text">OH, HI!</div>
+                    <div class="quality-badge">WEB-DL</div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">Oh, Hi!</div>
+                    <div class="movie-year">(2025)</div>
+                </div>
+            </div>
+
+            <div class="movie-card" onclick="openPlayer('Avengers: Endgame', '2019')">
+                <div class="movie-poster">
+                    <div class="poster-text">AVENGERS</div>
+                    <div class="quality-badge">BLURAY</div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">Avengers: Endgame</div>
+                    <div class="movie-year">(2019)</div>
+                </div>
+            </div>
+
+            <div class="movie-card" onclick="openPlayer('Suicide Squad', '2016')">
+                <div class="movie-poster">
+                    <div class="poster-text">SUICIDE SQUAD</div>
+                    <div class="quality-badge">BLURAY</div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">Suicide Squad</div>
+                    <div class="movie-year">(2016)</div>
+                </div>
+            </div>
+
+            <div class="movie-card" onclick="openPlayer('The Prosecutor', '2024')">
+                <div class="movie-poster">
+                    <div class="poster-text">PROSECUTOR</div>
+                    <div class="quality-badge">WEB-DL</div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">The Prosecutor</div>
+                    <div class="movie-year">(2024)</div>
+                </div>
+            </div>
+
+            <div class="movie-card" onclick="openPlayer('1')">
+                <div class="movie-poster">
+                    <div class="poster-text">WRONG PARIS</div>
+                    <div class="quality-badge">NF WEB-DL</div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">The Wrong Paris</div>
+                    <div class="movie-year">(2025)</div>
+                </div>
+            </div>
+
+            <div class="movie-card" onclick="openPlayer('Alienoid', '2022')">
+                <div class="movie-poster">
+                    <div class="poster-text">ALIENOID</div>
+                    <div class="quality-badge">BLURAY</div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">Alienoid</div>
+                    <div class="movie-year">(2022)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="video-player" id="videoPlayer">
+        <div class="player-container">
+            <div class="player-header">
+                <h3 id="movieTitle">Movie Player</h3>
+                <button class="close-btn" onclick="closePlayer()">✕</button>
+            </div>
+            <video id="videoElement" controls>
+                <p>Your browser doesn't support HTML5 video.</p>
+            </video>
+            <div class="error-message" id="errorMessage">
+                Failed to load video. Please check the file path and server connection.
+            </div>
+            <div class="controls">
+                <input type="text" class="url-input" id="videoUrl" placeholder="Enter video filename or path (e.g., movie.mp4)">
+                <button class="load-btn" onclick="loadCustomVideo()">Load Video</button>
+                <button class="control-btn" onclick="toggleFullscreen()">Fullscreen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const baseUrl = 'http://192.168.1.2:8000/';
+        let currentVideo = null;
+
+        function openPlayer(title, year) {
+            document.getElementById('movieTitle').textContent = `${title} ${year}`;
+            document.getElementById('videoPlayer').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            
+            // Clear previous video
+            const video = document.getElementById('videoElement');
+            video.src = '';
+            
+            // Set placeholder URL - user will need to specify the actual filename
+            const filename = title.toLowerCase().replace(/[^a-z0-9]/g, '_') + '.mp4';
+            document.getElementById('videoUrl').value = filename;
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePlayer() {
+            const video = document.getElementById('videoElement');
+            video.pause();
+            video.src = '';
+            document.getElementById('videoPlayer').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function loadCustomVideo() {
+            const videoUrl = document.getElementById('videoUrl').value.trim();
+            const video = document.getElementById('videoElement');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (!videoUrl) {
+                showError('Please enter a video filename');
+                return;
+            }
+            
+            const fullUrl = baseUrl + videoUrl;
+            
+            // Clear previous error
+            errorMessage.style.display = 'none';
+            
+            video.src = fullUrl;
+            video.load();
+            
+            video.onerror = function() {
+                showError(`Failed to load: ${fullUrl}`);
+            };
+            
+            video.onloadstart = function() {
+                console.log('Loading video from:', fullUrl);
+            };
+            
+            video.oncanplay = function() {
+                console.log('Video loaded successfully');
+                errorMessage.style.display = 'none';
+            };
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        function toggleFullscreen() {
+            const video = document.getElementById('videoElement');
+            
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) {
+                video.webkitRequestFullscreen();
+            } else if (video.mozRequestFullScreen) {
+                video.mozRequestFullScreen();
+            } else if (video.msRequestFullscreen) {
+                video.msRequestFullscreen();
+            }
+        }
+
+        // Close player with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePlayer();
+            }
+        });
+
+        // Close player when clicking outside the player container
+        document.getElementById('videoPlayer').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePlayer();
+            }
+        });
+
+        // Enter key to load video
+        document.getElementById('videoUrl').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loadCustomVideo();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        /* dekorasi lingkaran */
+        
+        body::before,
+        body::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 0;
+        }
+        
+        body::before {
+            width: 200px;
+            height: 200px;
+            top: -50px;
+            left: -50px;
+        }
+        
+        body::after {
+            width: 300px;
+            height: 300px;
+            bottom: -100px;
+            right: -100px;
+        }
+        
+        .login-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            width: 340px;
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .login-box h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .login-box input,
+        .login-box select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 12px;
+            outline: none;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-box button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .login-box button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-box">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Masukkan Username" required>
+        <select id="kelas" required>
+      <option value="">-- Pilih Kelas --</option>
+      <option value="4">Kelas 4</option>
+      <option value="5">Kelas 5</option>
+      <option value="6">Kelas 6</option>
+      <option value="7">Kelas 7</option>
+      <option value="8">Kelas 8</option>
+      <option value="9">Kelas 9</option>
+      <option value="10">Kelas 10</option>
+      <option value="11">Kelas 11</option>
+      <option value="12">Kelas 12</option>
+    </select>
+        <button onclick="login()">Masuk</button>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const kelas = document.getElementById('kelas').value;
+
+            if (username === "" || kelas === "") {
+                alert("Harap isi Username dan pilih Kelas!");
+                return;
+            }
+
+            // simpan username ke localStorage supaya bisa dipakai di halaman kelas
+            localStorage.setItem("username", username);
+
+            // pindah ke halaman sesuai kelas
+            window.location.href = "kelas/kelas" + kelas + ".html";
+        }
+    </script>
+</body>
+
+</html>

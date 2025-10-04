@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TST-INFORMATIKA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+        }
+        /* Animated Background Elements */
+        
+        .bg-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .bg-element:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            font-size: 80px;
+            animation-delay: 0s;
+        }
+        
+        .bg-element:nth-child(2) {
+            top: 20%;
+            right: 15%;
+            font-size: 60px;
+            animation-delay: 2s;
+        }
+        
+        .bg-element:nth-child(3) {
+            bottom: 20%;
+            left: 20%;
+            font-size: 70px;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        /* Header */
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .home-icon {
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ffa726, #ff7043);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .home-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        .home-icon::before {
+            content: '🏠';
+            font-size: 30px;
+        }
+        
+        .info-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #e91e63, #ad1457);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .info-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        .title-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 80px auto 0;
+            max-width: 600px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .title-card h1 {
+            font-size: 2.5rem;
+            color: #8b4513;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title-card h2 {
+            font-size: 2rem;
+            color: #8b4513;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title-card p {
+            font-size: 1.2rem;
+            color: #d2691e;
+            font-weight: 500;
+        }
+        /* Main Content */
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .menu-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+        
+        .menu-card:hover::before {
+            animation: shimmer 1.5s ease-in-out;
+        }
+        
+        .menu-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+        
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+                opacity: 0;
+            }
+        }
+        
+        .menu-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .belajar-icon {
+            background: linear-gradient(135deg, #26d0ce, #1a9cb0);
+            box-shadow: 0 10px 30px rgba(38, 208, 206, 0.4);
+        }
+        
+        .main-icon {
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+            box-shadow: 0 10px 30px rgba(74, 85, 104, 0.4);
+        }
+        
+        .menu-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2d3748;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        
+        .belajar-title {
+            background: linear-gradient(135deg, #26d0ce, #1a9cb0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .main-title {
+            background: linear-gradient(135deg, #ffd700, #ffb347);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .menu-subtitle {
+            font-size: 1rem;
+            color: #718096;
+            margin-top: 10px;
+        }
+        /* Decorative Elements */
+        
+        .decorative-hills {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg"><path d="M0,100 C300,150 500,50 800,100 C1000,150 1200,100 1200,100 L1200,200 L0,200 Z" fill="%23d2b48c" opacity="0.6"/><path d="M0,120 C250,80 450,160 700,120 C900,80 1200,120 1200,120 L1200,200 L0,200 Z" fill="%23daa520" opacity="0.4"/></svg>') no-repeat center bottom;
+            background-size: cover;
+            z-index: 1;
+        }
+        /* Responsive Design */
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            .title-card {
+                margin: 60px auto 0;
+                padding: 20px;
+            }
+            .title-card h1 {
+                font-size: 2rem;
+            }
+            .title-card p {
+                font-size: 1rem;
+            }
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                margin-top: 40px;
+            }
+            .menu-card {
+                padding: 30px 20px;
+            }
+            .menu-icon {
+                width: 100px;
+                height: 100px;
+                font-size: 40px;
+            }
+            .menu-title {
+                font-size: 1.6rem;
+            }
+            .home-icon {
+                top: -10px;
+                right: 10px;
+                width: 50px;
+                height: 50px;
+            }
+            .home-icon::before {
+                font-size: 24px;
+            }
+            .info-icon {
+                top: 10px;
+                left: 10px;
+                width: 50px;
+                height: 50px;
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title-card h1 {
+                font-size: 1.6rem;
+            }
+            .menu-title {
+                font-size: 1.4rem;
+                letter-spacing: 1px;
+            }
+            .menu-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 35px;
+            }
+        }
+        /* Floating particles animation */
+        
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float-particles 8s infinite linear;
+        }
+        
+        .particle:nth-child(odd) {
+            animation-duration: 10s;
+            background: rgba(255, 215, 0, 0.4);
+        }
+        
+        @keyframes float-particles {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        /* Loading animation */
+        
+        .loading {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Background decorative elements -->
+        <div class="bg-element">🖥</div>
+        <div class="bg-element">⌨</div>
+        <div class="bg-element">💡</div>
+
+        <!-- Floating particles -->
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: 2.5s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: 4.5s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: 1.5s;"></div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="info-icon">i</div>
+            <div class="home-icon" onclick="navigate('home')"></div>
+
+            <div class="title-card loading">
+                <h1>INFORMATIKA</h1>
+                <h2>Kelas 10</h2>
+                <p>(Ms.Offi?ce, Jaringan, Komputer)</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="menu-card loading" style="animation-delay: 0.3s;" onclick="navigate('belajar')">
+                <div class="menu-icon belajar-icon">
+                    📚
+                </div>
+                <div class="menu-title belajar-title">BELAJAR</div>
+            </div>
+<div class="menu-card loading" style="animation-delay: 0.6s;" onclick="navigate('video')">
+                <div class="menu-icon main-icon">
+                    🎬
+                </div>
+                <div class="menu-title main-title">VIDEO</div>
+            </div>
+        </div>
+
+        <!-- Decorative hills -->
+        <div class="decorative-hills"></div>
+    </div>
+
+    <script>
+ function navigate(section) {
+            // Ambil path saat ini
+            const currentPath = window.location.pathname;
+            
+            // Cek apakah sedang di folder belajar
+            const isInBelajarFolder = currentPath.includes("/belajar/");
+            
+            // Base path untuk navigasi
+            let basePath = isInBelajarFolder ? "../" : "./";
+            
+            if (section === "home") {
+                window.location.href = basePath + "home.html";
+            } else if (section === "belajar") {
+                // Pindah ke folder belajar dengan file belajar10.html
+                window.location.href = basePath + "belajar/belaja10.html";
+            } else if (section === "video") {
+                // Pindah ke folder video dengan file video10.html
+                window.location.href = basePath + "video/video10.html";
+            }
+        }
+            
+            // Navigate to the target URL
+            try {
+                window.location.href = targetUrl;
+            } catch (error) {
+                console.error('Navigation error:', error);
+                // Fallback navigation
+                if (section === "home") {
+                    window.history.back();
+                }
+            }
+
+        // Create more floating particles dynamically
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (Math.random() * 5 + 8) + 's';
+            document.querySelector('.container').appendChild(particle);
+
+            // Remove particle after animation
+            setTimeout(() => {
+                particle.remove();
+            }, 15000);
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 3000);
+
+        // Add hover sound effect simulation
+        document.querySelectorAll('.menu-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                // You can add actual sound here
+                console.log('Hover sound effect');
+            });
+        });
+
+        // Smooth scroll for mobile
+        document.addEventListener('touchstart', function() {}, {
+            passive: true
+        });
+
+        // Debug: Log page load information
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded');
+            console.log('Current location:', window.location);
+            console.log('Path segments:', window.location.pathname.split('/'));
+        });
+    </script>
+</body>
+
+</html>
